@@ -9,8 +9,8 @@ final class NotebookStore: ObservableObject {
 
     let rootURL: URL
 
-    init(rootURL: URL = NotebookStore.defaultRootURL()) {
-        self.rootURL = rootURL
+    init(rootURL: URL? = nil) {
+        self.rootURL = rootURL ?? NotebookStore.defaultRootURL()
     }
 
     static func defaultRootURL() -> URL {
@@ -137,7 +137,7 @@ final class NotebookStore: ObservableObject {
             try await CoordinatedFileWriter.write(pngData, to: backgroundURL)
         }
 
-        let thumbnailData = try await Task.detached(priority: .background) {
+        let thumbnailData = await Task.detached(priority: .background) {
             let thumbnail = RasterPageRenderer.renderImage(
                 drawing: drawing,
                 shapes: shapes,
